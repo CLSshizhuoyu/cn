@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>名言展示器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 50px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ffee;
+            margin-bottom: 50px;
+            font-size: 40px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 238, 0.5));
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 8px rgba(0, 255, 238, 0.5)); }
+            to { filter: drop-shadow(0 0 15px rgba(0, 255, 238, 0.8)); }
+        }
+
+        .section {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section:hover {
+            transform: translateY(-18px);
+            box-shadow: 0 25px 50px rgba(0, 255, 238, 0.4);
+            border-color: rgba(0, 255, 238, 0.3);
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #cccccc;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .btn {
+            background: #9d00ff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+            box-shadow: 0 8px 25px rgba(157, 0, 255, 0.5);
+            margin-right: 12px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.3);
+            box-shadow: 0 15px 40px rgba(0, 255, 238, 0.8);
+            background: #00ffee;
+            color: #000;
+        }
+
+        .btn:active {
+            transform: scale(0.85);
+            box-shadow: 0 5px 15px rgba(255, 0, 140, 0.6);
+        }
+
+        .show-box {
+            margin-top: 30px;
+            padding: 25px;
+            min-height: 100px;
+            border-radius: 15px;
+            background: rgba(20, 20, 20, 0.8);
+            font-size: 17px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .show-box:hover {
+            background: rgba(15, 15, 15, 1);
+            border-color: rgba(0, 255, 238, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #quoteDisplay {
+            font-size: 20px;
+            line-height: 2;
+            color: #ffffff;
+        }
+
+        #quoteDisplay span {
+            color: #00ffee;
+            margin-left: 15px;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        /* 歌曲名称文字样式 */
+        #songName {
+            font-size: 22px;
+            color: #00ffee;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>名言展示器</h1>
+
+    <div class="section">
+        <div class="section-title">抽取名言</div>
+        <button class="btn" onclick="getRandomQuote()">抽取</button>
+        <div id="quoteDisplay" class="show-box"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">抽取音乐</div>
+        <button class="btn" onclick="getRandomMusic()">抽取音乐</button>
+        <!-- 显示歌曲名称 -->
+        <div id="songName">暂未抽取歌曲</div>
+        <button class="btn" onclick="playAudio()">播放</button>
+        <button class="btn" onclick="pauseAudio()">暂停</button>
+    </div>
+
+    <script>
+        // 名言列表
+        const quoteList = [
+    { quote: "我看了下哈，做起的都做起了，没做起的都没做起。", author: "H" },
+    { quote: "怎么考完了才来找我对答案？你们考前干嘛去了？", author: "H" },
+    { quote: "这个定理很好用，因为它没有因为。", author: "H" },
+    { quote: "当你有意识的时候，你就没有意识了。", author: "P" },
+    { quote: "打扰lao zi上课了，你踩到红线了！内个是基础！", author: "X" },
+    { quote: "要成龙成蛇随便你嘛，但是你不能打扰老师上课和同学听课撒！", author: "X" },
+    { quote: "一套卷子做下来，不难也不简单，非常可口！！！", author: "X" },
+    { quote: "上课 做数学作业？我诅咒你 中考物理选择题 填 错 位", author: "X" },
+    { quote: "你们一起zamdomache（站到后面去）。", author: "X" },
+    { quote: "把那个睡觉的同学叫醒！打他！打他！怎么毕业了，倒是走了，我还要在这里工作都嘛！等下巡课的领导看到了，又要说：“9班那个1-1同学睡觉，你们都不带管的！”又要扣我工资！", author: "X" },
+    { quote: "今天还是老规矩，我们念一下选择题错了的人，有？！唉？我卷子呢？哦我记了的，找一下", author: "LJ" },
+    { quote: "何意味，你现在只能考六十几了，再这么下去，你怎么办啊？我们都已经放弃你了！", author: "LJ" },
+    { quote: "不能晚于本人到达！！！[○･｀Д´･ ○]", author: "LX" },
+    { quote: "出去不要说是为师教的哈！", author: "LX" },
+    { quote: "这道题做错了的你给我站起来！！！！！", author: "X" },
+    { quote: "pāng còu", author: "T" },
+    { quote: "把那风扇关了，都听不见H老师讲课了。", author: "H" },
+    { quote: "好我们来开车，还是来抽号哈。78 - 49 = 28？哈哈哈——新手表！哎？不对，是29。副社长（chāng）——", author: "LJ" },
+    { quote: "好我们今天就讲到这里，我们要和6班进度保持一致。", author: "W" },
+    { quote: "脏人  烂people  broken people  那个什么圈（juān）  差生  xī pī yu不太行  QZ你不帅了", author: "LX" },
+    { quote: "趁着PPT还在加载的时候，我们来抽背一下上节课的内容。", author: "Y" },
+    { quote: "狗都改不了吃shǐ", author: "X" },
+    { quote: "心浮气躁 心高气傲 偷工减料 生死难料 匪夷所思", author: "X" },
+    { quote: "优秀的四班，凌云的七班，laji的九班（其实四班被抛弃了）", author: "X" },
+    { quote: "你真的是个jiàng guǎi guǎi", author: "X" },
+    { quote: "生命在于对抗，隔壁全靠自觉", author: "X" },
+    { quote: "晚自习在教室里吃辣条的都是出生", author: "X" },
+    { quote: "莽子些", author: "X" },
+    { quote: "A+是一种仪式 good是能量的积蓄", author: "X" },
+    { quote: "年轻人，你现在最大的优势就是——年轻。千万富翁拿着600W你都不怕：“你没得几年了！”", author: "X" },
+    { quote: "假如你是老师，同学前面作业一个字都没改，你还会给他改作业吗？  我会！我要用爱感化你！", author: "X" },
+    { quote: "小laji", author: "X" },
+    { quote: "哇！新鲜出炉的25年中考题！肃 然 起 敬", author: "X" },
+    { quote: "距离中考在校时间仅剩5天，努力学习", author: "X" },
+    { quote: "从昨天堆到现在，BCE来下课把它发了。", author: "X" },
+    { quote: "“小丽想为外婆制作一个可调温的发热坐垫”，一个中xó森把电炉电阻丝咔嚓两段就跟往家庭电路上接，还用外婆做实验！！等下把她烤的滋滋冒油", author: "X" },
+    { quote: "哎麦个屎（Imax）有迷你摸（Umin）", author: "X" },
+    { quote: "我不中考！我烤过了！物理扣了一分。 咦——", author: "X" },
+    { quote: "拿上你心爱的橡皮擦，我擦擦擦擦擦擦擦", author: "X" }
+];
+
+        // 音乐列表：格式 {name:"歌曲名", url:"音频直链"}
+        const musicList = [
+            { name: "Creep", url: "https://lu-sycdn.kuwo.cn/cb0e98c8e39b0a7aa1e55d6db60b87c9/69f3671a/resource/a3/87/71/100739209.aac" },
+            { name: "快乐小马", url: "https://er-sycdn.kuwo.cn/20597db88c3795938fb7bbc0ac1af98d/69f36b29/resource/30106/trackmedia/M500003OBZ2f2GKSyk.mp3" },
+            { name: "New Romantics", url: "https://er-sycdn.kuwo.cn/1a4c52865c377205c0a1607300937f39/69f36b89/resource/30106/trackmedia/M500002XDpO646rLfV.mp3" },
+            { name: "半生雪", url: "https://er-sycdn.kuwo.cn/6f781e7d45b34745ae95c3b27d841683/69f36bd1/resource/30106/trackmedia/M500000rXKzF0bARc7.mp3" },
+            { name: "Shape of You", url: "https://lu-sycdn.kuwo.cn/2e9430a67aad2b0a903e7e65d0029a25/69f36bfe/resource/a1/45/55/1106152378.aac" },
+            { name: "Wake", url: "https://lv-sycdn.kuwo.cn/efd08204dbfe294be608ecdbdae440ea/69f36c46/resource/30106/trackmedia/M5000047ucuv36QmD5.mp3" },
+            { name: "Rumors", url: "https://er-sycdn.kuwo.cn/b459001741e0bc3222f19c400d119626/69f36c7f/resource/30106/trackmedia/M5000009qEpl39uM7I.mp3" },
+            { name: "少年·行", url: "https://lv-sycdn.kuwo.cn/b700c43c103a013e5155826d9a183d34/69f36cdb/resource/30106/trackmedia/M5000002znNB0QSWV7.mp3" },
+            { name: "小美满", url: "https://er-sycdn.kuwo.cn/fd276bf4669e53002e7fa64d38433abf/69f36d35/resource/30106/trackmedia/M500002xULmF1Ek57w.mp3" },
+            { name: "天天向上", url: "https://er-sycdn.kuwo.cn/2549cb30ef5e22e7c56736dd411345f3/69f36d65/resource/30106/trackmedia/M500001MpOHb1Jw7W2.mp3" },
+            { name: "十年", url: "https://er-sycdn.kuwo.cn/48ddea7872d61920d02f714fb5f0eec8/69f36d8b/resource/30106/trackmedia/M500001OyHbk2MSIi4.mp3" },
+            { name: "无名的人", url: "https://er-sycdn.kuwo.cn/b19fc366bcb50b615a216af29bd9a657/69f36dbf/resource/30106/trackmedia/M500002D6Bnx4PHi92.mp3" },
+            { name: "TAKE IT OFF", url: "https://lw-sycdn.kuwo.cn/56a83ceaf6a59456cac3c1566b6e1679/69f36e38/resource/30106/trackmedia/M500004drgKF3LPFtU.mp3" },
+            { name: "My Stupid Heart", url: "https://er-sycdn.kuwo.cn/f953ab8e3cf520b7ae37e0ab7e5b7408/69f36e73/resource/30106/trackmedia/M500001sjXjF0TWSPG.mp3" },
+            { name: "Catch My Breath", url: "https://lu-sycdn.kuwo.cn/2a60b371ee8beef84c16536c365f02dc/69f36e9f/resource/a2/81/7/1654787798.aac" },
+            { name: "追梦赤子心", url: "https://lu-sycdn.kuwo.cn/5434a4e919a12a634eb4aff6809ef25a/69f36ef1/resource/a2/18/72/2183779193.aac" },
+            { name: "剑魂", url: "https://lu-sycdn.kuwo.cn/35c27e448d436482b798fd39c54e4b2e/69f36f26/resource/a2/31/33/2381850201.aac" },
+            { name: "无名的人", url: "https://er-sycdn.kuwo.cn/836a920c735f80ecd9aea5641aafa87c/69f372bb/resource/30106/trackmedia/M500001hpDLo0H3P7D.mp3" },
+            { name: "แลกเลยปะ (Hoo Whee Hoo)", url: "https://er-sycdn.kuwo.cn/ce57d5b4d29b148bdc1cf8480067dc70/69f372f4/resource/30106/trackmedia/M5000041IoB30Ha31V.mp3" },
+            { name: "Love Story", url: "https://er-sycdn.kuwo.cn/8963f3cd541b7ab174775c6433582dfe/69f37322/resource/30106/trackmedia/M500002bMCLI4SRcE1.mp3" },
+            { name: "打上花火", url: "https://lx-sycdn.kuwo.cn/6cff5e670372ae8cf088da11ba836d01/69f37360/resource/a2/43/43/2375641311.aac" },
+            { name: "灯火里的中国", url: "https://lu-sycdn.kuwo.cn/09577e9cf98c9fefabf57698e13e8bd2/69f37385/resource/a2/38/99/1911786244.aac" },
+            { name: "重庆得行", url: "https://lu-sycdn.kuwo.cn/4ce249c9581ed51c8db2cb1fb7909acc/69f373a5/resource/a2/48/23/2541854778.aac" },
+            { name: "骄傲的少年", url: "https://er-sycdn.kuwo.cn/e5ea4dc140d372a688316e1d509f6e55/69f373d2/resource/30106/trackmedia/M500001L93Ip2MvTLv.mp3" },
+            { name: "太阳", url: "https://lx-sycdn.kuwo.cn/0e3f209f85c88b5f65be36b93423f589/69f37434/resource/a2/16/91/68414181.aac" },
+            { name: "绝配", url: "https://lu-sycdn.kuwo.cn/94337464007d28cd8623ce475f039b81/69f37455/resource/a1/18/1/109151951.aac" },
+            { name: "I Just Wanna Run ", url: "https://lx-sycdn.kuwo.cn/567488cf1f3bc29f74317b61c25ede32/69f3747c/resource/a2/36/73/1573567494.aac" },
+            { name: "A little story", url: "https://lu-sycdn.kuwo.cn/461edd853476828b1897440f09e135be/69f3749c/resource/a3/28/99/2717024721.aac" },
+            { name: "我要夏天", url: "https://lu-sycdn.kuwo.cn/c12ac372685df3803a1cd841056d8f16/69f374d8/resource/a2/53/18/1593627521.aac" },
+            { name: "Reality", url: "https://lu-sycdn.kuwo.cn/54878038fe833caf19a90f266699dc10/69f374fa/resource/a1/9/11/1135854605.aac" },
+            { name: "Hello Summer", url: "https://er-sycdn.kuwo.cn/ea4545063092a0d17b1d99dad05e24f0/69f3751c/resource/30106/trackmedia/M500003LAKU32zYV7X.mp3" },
+            { name: "向上吧！少年", url: "https://lu-sycdn.kuwo.cn/888be5e2cd1badf4c3e89f3be90447a2/69f3f9b1/resource/a3/70/93/2590031071.aac" }
+        ];
+
+        let lastQuoteIndex = -1;
+        let lastMusicIndex = -1;
+        const audio = new Audio();
+
+        // 抽取名言 不重复
+        function getRandomQuote() {
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * quoteList.length);
+            } while (idx === lastQuoteIndex);
+            lastQuoteIndex = idx;
+            let item = quoteList[idx];
+            document.getElementById("quoteDisplay").innerHTML = `"${item.quote}" <span>—— ${item.author}</span>`;
+        }
+
+        // 抽取音乐 + 显示歌名 + 防崩溃
+        function getRandomMusic() {
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * musicList.length);
+            } while (idx === lastMusicIndex);
+            lastMusicIndex = idx;
+
+            // 防崩溃处理
+            audio.pause();
+            audio.src = "";
+
+            let item = musicList[idx];
+            audio.src = item.url;
+            // 显示歌曲名
+            document.getElementById("songName").innerText = "当前歌曲：" + item.name;
+        }
+
+        function playAudio() {
+            audio.play();
+        }
+        function pauseAudio() {
+            audio.pause();
+        }
+    </script>
+</body>
+</html>
