@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>名言展示器</title>
+    <title>CLUB</title>
     <style>
         * {
             margin: 0;
@@ -32,6 +32,16 @@
             filter: drop-shadow(0 0 8px rgba(0, 255, 238, 0.5));
             animation: glow 2s ease-in-out infinite alternate;
         }
+
+        /* 底部版权声明 */
+        .copyright {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 60px;
+    padding-bottom: 30px;
+    letter-spacing: 1px;
+}
 
         @keyframes glow {
             from { filter: drop-shadow(0 0 8px rgba(0, 255, 238, 0.5)); }
@@ -100,7 +110,7 @@
         }
 
         .show-box:hover {
-            background: rgba(15, 15, 15, 1);
+            background: rgba15, 15, 15, 1);
             border-color: rgba(0, 255, 238, 0.2);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         }
@@ -118,33 +128,40 @@
             font-weight: bold;
         }
 
-        /* 歌曲名称文字样式 */
+        /* 歌曲名称样式 */
         #songName {
             font-size: 22px;
             color: #00ffee;
             margin: 15px 0;
             font-weight: bold;
         }
+
+        /* 网易云iframe播放器 */
+        #musicFrame {
+            width: 100%;
+            height: 80px;
+            border: none;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>名言展示器</h1>
-
+    <h1>Class Nine's CLUB</h1>
     <div class="section">
-        <div class="section-title">抽取名言</div>
+        <div class="section-title">抽取每日一言</div>
         <button class="btn" onclick="getRandomQuote()">抽取</button>
         <div id="quoteDisplay" class="show-box"></div>
     </div>
 
     <div class="section">
-        <div class="section-title">抽取音乐</div>
+        <div class="section-title">抽取每日一曲</div>
         <button class="btn" onclick="getRandomMusic()">抽取音乐</button>
         <!-- 显示歌曲名称 -->
         <div id="songName">暂未抽取歌曲</div>
-        <button class="btn" onclick="playAudio()">播放</button>
-        <button class="btn" onclick="pauseAudio()">暂停</button>
+        <iframe id="musicFrame" src=""></iframe>
     </div>
 
+    <div class="copyright"><a href="https://github.com/CLSshizhuoyu/cn/blob/main/list.txt" target="_blank" style="color:#00ffee;text-decoration:none;margin-left:8px;">每日一言、每日一曲内容</a>版权归原作者所有，仅供学习欣赏；<a href="https://music.163.com" target="_blank" style="color:#00ffee;text-decoration:none;margin-left:8px;">音乐</a>仅作演示，不涉及版权声明。</div>
     <script>
         // 名言列表
         const quoteList = [
@@ -189,47 +206,41 @@
     { quote: "拿上你心爱的橡皮擦，我擦擦擦擦擦擦擦", author: "X" }
 ];
 
-        // 音乐列表：格式 {name:"歌曲名", url:"音频直链"}
+        // 音乐列表：只填 名称 + 网易云歌曲ID
+        // 格式 {name:"歌曲名", id:纯数字ID}
         const musicList = [
-            { name: "Creep", url: "https://lu-sycdn.kuwo.cn/cb0e98c8e39b0a7aa1e55d6db60b87c9/69f3671a/resource/a3/87/71/100739209.aac" },
-            { name: "快乐小马", url: "https://er-sycdn.kuwo.cn/20597db88c3795938fb7bbc0ac1af98d/69f36b29/resource/30106/trackmedia/M500003OBZ2f2GKSyk.mp3" },
-            { name: "New Romantics", url: "https://er-sycdn.kuwo.cn/1a4c52865c377205c0a1607300937f39/69f36b89/resource/30106/trackmedia/M500002XDpO646rLfV.mp3" },
-            { name: "半生雪", url: "https://er-sycdn.kuwo.cn/6f781e7d45b34745ae95c3b27d841683/69f36bd1/resource/30106/trackmedia/M500000rXKzF0bARc7.mp3" },
-            { name: "Shape of You", url: "https://lu-sycdn.kuwo.cn/2e9430a67aad2b0a903e7e65d0029a25/69f36bfe/resource/a1/45/55/1106152378.aac" },
-            { name: "Wake", url: "https://lv-sycdn.kuwo.cn/efd08204dbfe294be608ecdbdae440ea/69f36c46/resource/30106/trackmedia/M5000047ucuv36QmD5.mp3" },
-            { name: "Rumors", url: "https://er-sycdn.kuwo.cn/b459001741e0bc3222f19c400d119626/69f36c7f/resource/30106/trackmedia/M5000009qEpl39uM7I.mp3" },
-            { name: "少年·行", url: "https://lv-sycdn.kuwo.cn/b700c43c103a013e5155826d9a183d34/69f36cdb/resource/30106/trackmedia/M5000002znNB0QSWV7.mp3" },
-            { name: "小美满", url: "https://er-sycdn.kuwo.cn/fd276bf4669e53002e7fa64d38433abf/69f36d35/resource/30106/trackmedia/M500002xULmF1Ek57w.mp3" },
-            { name: "天天向上", url: "https://er-sycdn.kuwo.cn/2549cb30ef5e22e7c56736dd411345f3/69f36d65/resource/30106/trackmedia/M500001MpOHb1Jw7W2.mp3" },
-            { name: "十年", url: "https://er-sycdn.kuwo.cn/48ddea7872d61920d02f714fb5f0eec8/69f36d8b/resource/30106/trackmedia/M500001OyHbk2MSIi4.mp3" },
-            { name: "无名的人", url: "https://er-sycdn.kuwo.cn/b19fc366bcb50b615a216af29bd9a657/69f36dbf/resource/30106/trackmedia/M500002D6Bnx4PHi92.mp3" },
-            { name: "TAKE IT OFF", url: "https://lw-sycdn.kuwo.cn/56a83ceaf6a59456cac3c1566b6e1679/69f36e38/resource/30106/trackmedia/M500004drgKF3LPFtU.mp3" },
-            { name: "My Stupid Heart", url: "https://er-sycdn.kuwo.cn/f953ab8e3cf520b7ae37e0ab7e5b7408/69f36e73/resource/30106/trackmedia/M500001sjXjF0TWSPG.mp3" },
-            { name: "Catch My Breath", url: "https://lu-sycdn.kuwo.cn/2a60b371ee8beef84c16536c365f02dc/69f36e9f/resource/a2/81/7/1654787798.aac" },
-            { name: "追梦赤子心", url: "https://lu-sycdn.kuwo.cn/5434a4e919a12a634eb4aff6809ef25a/69f36ef1/resource/a2/18/72/2183779193.aac" },
-            { name: "剑魂", url: "https://lu-sycdn.kuwo.cn/35c27e448d436482b798fd39c54e4b2e/69f36f26/resource/a2/31/33/2381850201.aac" },
-            { name: "无名的人", url: "https://er-sycdn.kuwo.cn/836a920c735f80ecd9aea5641aafa87c/69f372bb/resource/30106/trackmedia/M500001hpDLo0H3P7D.mp3" },
-            { name: "แลกเลยปะ (Hoo Whee Hoo)", url: "https://er-sycdn.kuwo.cn/ce57d5b4d29b148bdc1cf8480067dc70/69f372f4/resource/30106/trackmedia/M5000041IoB30Ha31V.mp3" },
-            { name: "Love Story", url: "https://er-sycdn.kuwo.cn/8963f3cd541b7ab174775c6433582dfe/69f37322/resource/30106/trackmedia/M500002bMCLI4SRcE1.mp3" },
-            { name: "打上花火", url: "https://lx-sycdn.kuwo.cn/6cff5e670372ae8cf088da11ba836d01/69f37360/resource/a2/43/43/2375641311.aac" },
-            { name: "灯火里的中国", url: "https://lu-sycdn.kuwo.cn/09577e9cf98c9fefabf57698e13e8bd2/69f37385/resource/a2/38/99/1911786244.aac" },
-            { name: "重庆得行", url: "https://lu-sycdn.kuwo.cn/4ce249c9581ed51c8db2cb1fb7909acc/69f373a5/resource/a2/48/23/2541854778.aac" },
-            { name: "骄傲的少年", url: "https://er-sycdn.kuwo.cn/e5ea4dc140d372a688316e1d509f6e55/69f373d2/resource/30106/trackmedia/M500001L93Ip2MvTLv.mp3" },
-            { name: "太阳", url: "https://lx-sycdn.kuwo.cn/0e3f209f85c88b5f65be36b93423f589/69f37434/resource/a2/16/91/68414181.aac" },
-            { name: "绝配", url: "https://lu-sycdn.kuwo.cn/94337464007d28cd8623ce475f039b81/69f37455/resource/a1/18/1/109151951.aac" },
-            { name: "I Just Wanna Run ", url: "https://lx-sycdn.kuwo.cn/567488cf1f3bc29f74317b61c25ede32/69f3747c/resource/a2/36/73/1573567494.aac" },
-            { name: "A little story", url: "https://lu-sycdn.kuwo.cn/461edd853476828b1897440f09e135be/69f3749c/resource/a3/28/99/2717024721.aac" },
-            { name: "我要夏天", url: "https://lu-sycdn.kuwo.cn/c12ac372685df3803a1cd841056d8f16/69f374d8/resource/a2/53/18/1593627521.aac" },
-            { name: "Reality", url: "https://lu-sycdn.kuwo.cn/54878038fe833caf19a90f266699dc10/69f374fa/resource/a1/9/11/1135854605.aac" },
-            { name: "Hello Summer", url: "https://er-sycdn.kuwo.cn/ea4545063092a0d17b1d99dad05e24f0/69f3751c/resource/30106/trackmedia/M500003LAKU32zYV7X.mp3" },
-            { name: "向上吧！少年", url: "https://lu-sycdn.kuwo.cn/888be5e2cd1badf4c3e89f3be90447a2/69f3f9b1/resource/a3/70/93/2590031071.aac" }
+            { name: "Creep", id: 2639974848 },
+            { name: "快乐小马", id: 3349097717 },
+            { name: "New Romantics", id: 543077473 },
+            { name: "半生雪", id: 3339210692},
+            { name: "Wake", id: 2044457707 },
+            { name: "Shape of You", id: 3325425196 },
+            { name: "Rumors", id: 3320930952 },
+            { name: "少年·行", id: 1410840482 },
+            { name: "天天向上", id: 2106426554 },
+            { name: "十年", id: 1467536356 },
+            { name: "TAKE IT OFF", id: 2012279904 },
+            { name: "My Stupid Heart", id: 2105087382 },
+            { name: "Catch My Breath", id: 26226510 },
+            { name: "追梦赤子心", id: 29932183 },
+            { name: "แลกเลยปะ (Hoo Whee Hoo)", id: 1940022973 },
+            { name: "打上花火", id: 524149974 },
+            { name: "灯火里的中国", id: 1837528900 },
+            { name: "重庆得行", id: 1975847012 },
+            { name: "太阳", id: 460112012 },
+            { name: "绝配", id: 2025953071 },
+            { name: "I Just Wanna Run", id: 3361255757 },
+            { name: "A little story", id: 1479543416 },
+            { name: "Reality", id: 32835377 },
+            { name: "Hello Summer",id: 424477211 },
+            { name: "向上吧！少年", id: 1952790752 }
         ];
+
 
         let lastQuoteIndex = -1;
         let lastMusicIndex = -1;
-        const audio = new Audio();
 
-        // 抽取名言 不重复
+        // 抽取名言 绝不重复
         function getRandomQuote() {
             let idx;
             do {
@@ -240,7 +251,7 @@
             document.getElementById("quoteDisplay").innerHTML = `"${item.quote}" <span>—— ${item.author}</span>`;
         }
 
-        // 抽取音乐 + 显示歌名 + 防崩溃
+        // 抽取音乐：显示歌名 + 自动拼接网易云iframe
         function getRandomMusic() {
             let idx;
             do {
@@ -248,21 +259,13 @@
             } while (idx === lastMusicIndex);
             lastMusicIndex = idx;
 
-            // 防崩溃处理
-            audio.pause();
-            audio.src = "";
-
             let item = musicList[idx];
-            audio.src = item.url;
-            // 显示歌曲名
+            // 拼接你指定的固定iframe链接
+            let iframeUrl = `https://music.163.com/outchain/player?type=2&id=${item.id}&auto=1&height=66`;
+            
+            // 显示歌曲名 + 加载播放器
             document.getElementById("songName").innerText = "当前歌曲：" + item.name;
-        }
-
-        function playAudio() {
-            audio.play();
-        }
-        function pauseAudio() {
-            audio.pause();
+            document.getElementById("musicFrame").src = iframeUrl;
         }
     </script>
 </body>
