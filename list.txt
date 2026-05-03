@@ -1,4 +1,4 @@
-    const quoteList = [
+const quoteList = [
     { quote: "我看了下哈，做起的都做起了，没做起的都没做起。", author: "H" },
     { quote: "怎么考完了才来找我对答案？你们考前干嘛去了？", author: "H" },
     { quote: "这个定理很好用，因为它没有因为。", author: "H" },
